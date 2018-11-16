@@ -1,0 +1,71 @@
+
+.profile-main {
+    text-align: center;
+    vertical-align: middle;
+    width: 95%;
+    margin: 1rem auto;
+    min-height: 100vh;
+}
+
+.profile-info {
+    width: 75%;
+    margin: 1rem auto;
+    background-color: rgba(255, 255, 255, .3);
+    padding: 1rem .5rem .5rem 2rem;
+    border-radius: 16px;
+    text-align: left;
+}
+
+.pic-container {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    width: 30%;
+    margin-right: 2rem;
+}
+
+#user-pic {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, .5);
+}
+
+.profile-info button,
+input[type="submit"] {
+    margin: .5rem;
+    padding: .5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, .5);
+}
+
+.profile-info button:active,
+input[type="submit"]:active {
+    box-shadow: none;
+}
+
+.save-container {
+    text-align: right;
+}
+
+.info-container {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+}
+
+#user-info {
+}
+
+.user-picture {
+    display: inline-block;
+    border: solid 8px #322A0E;
+    border-radius: 8px;
+    height: 200px;
+    width: 300px;
+    cursor: pointer;
+    box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, .5);
+    /*background-color: #d3952d;*/
+    /*padding: 8px;*/
+}
+

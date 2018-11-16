@@ -1,0 +1,103 @@
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100vh;
+}
+
+body {
+    font-family: Calibri, sans-serif;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+}
+
+.main-nav {
+    padding: .5rem 2rem;
+    margin: 0;
+    border: none;
+    text-align: center;
+}
+
+.main-nav ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.main-nav li {
+    display: inline-block;
+    margin: 0 0 0 1.5rem;
+}
+
+.main-nav a {
+    color: inherit;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+}
+
+.main-nav a:hover {
+
+}
+
+.leaves-border-right,
+.leaves-border-left {
+    display: none;
+}
+
+button:hover,
+button:active,
+input[type="submit"]:hover,
+input[type="submit"]:active {
+    cursor: pointer;
+}
+
+button:focus,
+input[type="submit"]:focus {
+    outline: none !important;
+}
+
+input:focus {
+    outline: none;
+}
+
+.main-footer {
+    text-align: center;
+    padding: .7rem;
+    margin: 1rem 0 0 0;
+    border: none;
+}
+
+.main-footer p {
+    margin: .2rem;
+}
+
+@media (min-width: 56rem) {
+
+    .main-nav {
+        text-align: left;
+    }
+
+    .main-nav li {
+        margin: 0 0 0 2rem;
+    }
+
+    .leaves-border-right,
+    .leaves-border-left {
+        display: block;
+        background: url('images/leaves.svg') center/contain repeat-y;
+        float: left;
+        height: 105vh;
+        width: 5rem;
+        margin: 0 1rem;
+    }
+
+    .leaves-border-right {
+        float: right;
+    }
+
+}

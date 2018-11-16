@@ -1,0 +1,109 @@
+
+.salutation {
+    font-family: 'Homemade Apple', cursive;
+    font-size: 2.5rem;
+}
+
+.main {
+    text-align: center;
+    vertical-align: middle;
+    width: 95%;
+    margin: 1rem auto;
+    min-height: 100vh;
+}
+
+.sign-in {
+    max-width: 26rem;
+    margin: 2rem auto;
+    padding: .5rem 1rem .5rem 1rem;
+    border-radius: 28px;
+    text-align: left;
+}
+
+.sign-in > h2 {
+    margin: .5rem 0;
+}
+
+.main-img {
+    width: 280px;
+    margin: 0 1rem;
+}
+
+form input,
+form label {
+    border-radius: 4px;
+    margin: 1rem .5rem;
+    padding: .2rem;
+    width: 100%;
+}
+
+form .col-30 label,
+form .col-40 label {
+    font-weight: bold;
+}
+
+form input {
+    border: 1px #322A0E solid;
+}
+
+form input[type="radio"] {
+    border-radius: 0;
+    margin: 1rem 0;
+    padding: 0;
+    width: 16px;
+}
+
+#sign-in-btn {
+    display: block;
+    width: 6rem;
+    margin: 1rem auto;
+    padding: .5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#sign-in-btn:focus {
+    outline: none;
+}
+
+.register-link {
+    color: white;
+    cursor: pointer;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+@media (min-width: 56rem) {
+
+    .salutation {
+        font-family: 'Homemade Apple', cursive;
+        font-size: 3rem;
+        margin-top: 0;
+    }
+
+    /*.main {*/
+        /*border: 100px solid transparent;*/
+        /*border-image: url("images/leaves.svg") 800 repeat;*/
+        /*border-top: none;*/
+        /*padding-top: 0;*/
+        /*padding-bottom: 2rem;*/
+        /*margin: .5rem auto;*/
+        /*background-color: transparent;*/
+        /*height: auto;*/
+    /*}*/
+
+    .sign-in,
+    .main-img-container {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .sign-in {
+        width: 40%;
+    }
+
+}
+
+

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=yes, initial-scale=1.0,">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous">
+    </script>
+
+    <link rel="stylesheet" href="../utils.css">
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="drawing.css">
+
+    <title>Games</title>
+</head>
+<body class="bg-secondary" onload="loadColors()" onbeforeunload="saveColors()">
+
+    <nav class="main-nav bg-dark">
+        <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../trivia">Trivia</a></li>
+            <li><a href="../profile">Profile</a></li>
+            <li><a href="/">Drawing</a></li>
+        </ul>
+    </nav>
+
+    <div class="leaves-border-left"></div>
+    <div class="leaves-border-right"></div>
+
+    <div class="games-main">
+        <h1>Draw something cool!</h1>
+
+        <div class="drawing-area">
+            <h2 id="canvas-title">
+                Untitled
+                <small onclick="editCanvasTitle()"> edit</small>
+            </h2>
+            <div id="edit-canvas-title" class="hidden">
+                <label for="canvas-title-input"><b>Title</b>: </label>
+                <input id="canvas-title-input" type="text">
+                <button class="bg-dark" onclick="submitCanvasTitle()">Submit</button>
+            </div>
+            <canvas width="600" height="400"></canvas>
+            <div class="canvas-options bg-dark">
+                <div class="colors">
+                    <div id="color1" class="color active-color" onclick="changeColor(1)"></div>
+                    <div id="color2" class="color" onclick="changeColor(2)"></div>
+                    <div id="color3" class="color" onclick="changeColor(3)"></div>
+                    <div id="color4" class="color" onclick="changeColor(4)"></div>
+                    <div id="color5" class="color" onclick="changeColor(5)"></div>
+                    <div id="color6" class="color" onclick="changeColor(6)"></div>
+                    <div id="color7" class="color" onclick="changeColor(7)"></div>
+                    <div id="color8" class="color" onclick="changeColor(8)"></div>
+                    <button class="edit-colors-btn bg-secondary" onclick="editColors()">Edit Colors</button>
+                </div>
+                <div class="color-editors hidden">
+                    <input id="colorEdit1" class="color-editor" type="text">
+                    <input id="colorEdit2" class="color-editor" type="text">
+                    <input id="colorEdit3" class="color-editor" type="text">
+                    <input id="colorEdit4" class="color-editor" type="text">
+                    <input id="colorEdit5" class="color-editor" type="text">
+                    <input id="colorEdit6" class="color-editor" type="text">
+                    <input id="colorEdit7" class="color-editor" type="text">
+                    <input id="colorEdit8" class="color-editor" type="text">
+                    <button class="confirm-colors-btn bg-secondary" onclick="confirmColors()">Confirm</button>
+                </div>
+                <hr class="color-divider">
+                <div class="line-size-selection">
+                    <span id="size4" class="line-size" onclick="changeLineSize(4)">Extra Small</span>
+                    <span id="size16" class="line-size active-line-size" onclick="changeLineSize(16)">Small</span>
+                    <span id="size32" class="line-size" onclick="changeLineSize(32)">Medium</span>
+                    <span id="size64" class="line-size" onclick="changeLineSize(64)">Large</span>
+                    <span id="size128" class="line-size" onclick="changeLineSize(128)">Extra Large</span>
+                </div>
+            </div>
+            <button class="save-canvas-btn bg-dark" onclick="saveCanvas(event)">Save to Gallery</button>
+        </div>
+    </div>
+
+    <footer class="main-footer bg-dark">
+        <p>Copyright &copy; 2018 by Nicholas Cummings</p>
+        <p>All Rights Reserved.</p>
+    </footer>
+
+    <script>
+
+        let canvasTitle = document.querySelector("#canvas-title");
+        let editCanvasTitleEl = document.querySelector("#edit-canvas-title");
+        let canvasTitleInput = document.querySelector("#canvas-title-input");
+
+        function editCanvasTitle() {
+            let title = canvasTitle.textContent.trim();
+            title = title.substr(0, title.indexOf(" edit")).trim();
+            console.log(title);
+
+            canvasTitleInput.value = title;
+
+            canvasTitle.classList.add("hidden");
+            editCanvasTitleEl.classList.remove("hidden");
+        }
+
+        function submitCanvasTitle() {
+            let title = canvasTitleInput.value;
+            canvasTitle.innerHTML = title + "<small onclick=\'editCanvasTitle()\'> edit</small>"
+
+            editCanvasTitleEl.classList.add("hidden");
+            canvasTitle.classList.remove("hidden");
+        }
+
+        let page = $("html");
+        let canvas = $("canvas");
+        let context = canvas[0].getContext("2d");
+        let lastEvent = null;
+        let mouseDown = false;
+
+        context.fillStyle = "white";
+        context.fillRect(0, 0, 600, 400);
+
+        page.mouseup(function () {
+            mouseDown = false;
+        });
+
+        canvas.mousedown(function(e) {
+            lastEvent = e;
+            mouseDown = true;
+            drawLine(e, e);
+        }).mousemove(function(e) {
+            if (mouseDown) {
+                drawLine(lastEvent, e);
+                lastEvent = e;
+            }
+        }).mouseleave(function() {
+            lastEvent = null;
+        }).mouseenter(function () {
+            if (mouseDown) {
+                canvas.mousedown();
+            }
+        });
+
+        let lineColor = "black";
+        let lineWidth = 8;
+
+        function drawLine(start, end) {
+            context.beginPath();
+            context.moveTo(start.offsetX, start.offsetY);
+            context.lineTo(end.offsetX, end.offsetY);
+            context.strokeStyle = lineColor;
+            context.lineWidth = lineWidth;
+            context.lineCap = "round";
+            context.lineJoin = "round";
+            context.stroke();
+        }
+
+        let colors = {
+            1: "black",
+            2: "white",
+            3: "red",
+            4: "orange",
+            5: "yellow",
+            6: "green",
+            7: "blue",
+            8: "purple"
+        };
+
+        let activeColor = $("#color1");
+        let activeLineSize = $("#size16");
+
+        function changeColor(colorNum) {
+            lineColor = colors[colorNum];
+
+            activeColor.removeClass("active-color");
+            activeColor = $("#color" + colorNum);
+            activeColor.addClass("active-color");
+        }
+
+        function changeLineSize(size) {
+            lineWidth = size;
+
+            activeLineSize.removeClass("active-line-size");
+            activeLineSize = $("#size" + size);
+            activeLineSize.addClass("active-line-size");
+        }
+
+        function editColors() {
+            document.querySelector("#colorEdit1").value = colors[1];
+            document.querySelector("#colorEdit2").value = colors[2];
+            document.querySelector("#colorEdit3").value = colors[3];
+            document.querySelector("#colorEdit4").value = colors[4];
+            document.querySelector("#colorEdit5").value = colors[5];
+            document.querySelector("#colorEdit6").value = colors[6];
+            document.querySelector("#colorEdit7").value = colors[7];
+            document.querySelector("#colorEdit8").value = colors[8];
+
+            document.querySelector(".colors").classList.add("hidden");
+            document.querySelector(".color-editors").classList.remove("hidden");
+        }
+
+        function confirmColors() {
+            colors[1] = $("#colorEdit1").val();
+            colors[2] = $("#colorEdit2").val();
+            colors[3] = $("#colorEdit3").val();
+            colors[4] = $("#colorEdit4").val();
+            colors[5] = $("#colorEdit5").val();
+            colors[6] = $("#colorEdit6").val();
+            colors[7] = $("#colorEdit7").val();
+            colors[8] = $("#colorEdit8").val();
+            setColors();
+
+            document.querySelector(".color-editors").classList.add("hidden");
+            document.querySelector(".colors").classList.remove("hidden");
+        }
+
+        function loadColors() {
+            console.log(localStorage.colors);
+            if (localStorage.colors !== undefined) colors = JSON.parse(localStorage.colors);
+
+            setColors();
+        }
+
+        function setColors() {
+            document.querySelector("#color1").style.backgroundColor = colors[1];
+            document.querySelector("#color2").style.backgroundColor = colors[2];
+            document.querySelector("#color3").style.backgroundColor = colors[3];
+            document.querySelector("#color4").style.backgroundColor = colors[4];
+            document.querySelector("#color5").style.backgroundColor = colors[5];
+            document.querySelector("#color6").style.backgroundColor = colors[6];
+            document.querySelector("#color7").style.backgroundColor = colors[7];
+            document.querySelector("#color8").style.backgroundColor = colors[8];
+        }
+
+        function saveColors() {
+            localStorage.colors = JSON.stringify(colors);
+            console.log(localStorage.colors);
+        }
+
+        let user = {};
+
+        function saveCanvas(event) {
+            event.preventDefault();
+            let user = JSON.parse(localStorage.userInfo);
+
+            if (user.username === undefined) alert("Please login to enable saving of pictures.");
+            console.log("Saving canvas");
+
+            let title = canvasTitle.textContent.trim();
+            title = title.substr(0, title.indexOf(" edit")).trim();
+
+            let picture = {
+                username: user.username,
+                title: title,
+                content: canvas[0].toDataURL()
+            };
+
+            let userPictures = [picture];
+            localStorage.pictures = JSON.stringify(userPictures);
+            console.log(userPictures);
+        }
+
+
+
+    </script>
+
+</body>
+</html>

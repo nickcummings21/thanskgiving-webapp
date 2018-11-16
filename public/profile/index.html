@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=yes, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="../utils.css">
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="profile.css">
+
+    <title>Profile</title>
+</head>
+<body class="bg-secondary" onload="loadUserProfile()">
+
+    <nav class="main-nav bg-dark">
+        <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../trivia">Trivia</a></li>
+            <li><a href="/">Profile</a></li>
+            <li><a href="../drawing">Drawing</a></li>
+        </ul>
+    </nav>
+
+    <div class="leaves-border-left"></div>
+    <div class="leaves-border-right"></div>
+
+    <div class="profile-main">
+        <h1>Profile</h1>
+
+        <div class="profile-info">
+            <div class="pic-container">
+                <img id="user-pic" src="https://api.adorable.io/avatars/hello" alt="profile-pic">
+                <button id="rand-pic-btn" class="bg-dark" onclick="getRandAvatar(event)">Get Random Avatar</button>
+            </div>
+            <div class="info-container">
+                <p id="user-info" ondblclick="editProfile()"></p>
+                <form id="edit-info-form" class="hidden" onsubmit="finishEditProfile(event)" autocomplete="off">
+                    <p id="username"></p>
+                    <p>
+                        <label for="name"><b>Name</b>:</label>
+                        <input type="text" id="name">
+                    </p>
+                    <p>
+                        <label for="occupation"><b>Occupation</b>:</label>
+                        <input type="text" id="occupation"><br>
+                    </p>
+                    <p>
+                        <label for="hobbies"><b>Hobbies</b>:</label>
+                        <input type="text" id="hobbies">
+                    </p>
+                    <input type="submit" class="bg-dark">
+                </form>
+                <button id="edit-info-btn" class="bg-dark" onclick="editProfile()">Edit User Info</button>
+            </div>
+            <div class="save-container">
+                <button id="save-info-btn" class="bg-dark" onclick="saveUserProfile()">Save</button>
+            </div>
+        </div>
+
+        <div class="gallery">
+            <h2 class="gallery-title">Gallery</h2>
+
+            <img class="user-picture" src="">
+        </div>
+    </div>
+
+    <footer class="main-footer bg-dark">
+        <p>Copyright &copy; 2018 by Nicholas Cummings</p>
+        <p>All Rights Reserved.</p>
+    </footer>
+
+    <script>
+
+        let userInfo = {};
+        let userPersonalInfo = {
+            username: "",
+            name: "Unknown",
+            occupation: "Unknown",
+            hobbies: "Unknown",
+            pic: "https://api.adorable.io/avatars/hello"
+        };
+
+        let pictures = JSON.parse(localStorage.pictures);
+
+        function loadUserProfile() {
+            userInfo = JSON.parse(localStorage.userInfo);
+            console.log(userInfo);
+
+            console.log(pictures);
+            document.querySelector(".user-picture").src = pictures[0].content;
+
+            const query = '..\\get-user-details?username=' + userInfo.username;
+            $.getJSON(query, function(data) {
+                console.log("Details", data);
+                if (data.length > 0 && data[0].username !== undefined) {
+                    userPersonalInfo = data[0];
+                }
+                else {
+                    userPersonalInfo.username = userInfo.username;
+                    saveUserProfile();
+                }
+
+                document.querySelector('#user-pic').src = userPersonalInfo.pic;
+
+                $("#user-info").html(
+                    "<p><b>Username</b>: " + userInfo.username + "</p>" +
+                    "<p><b>Name</b>: " + userPersonalInfo.name + "</p>" +
+                    "<p><b>Occupation</b>: " + userPersonalInfo.occupation + "</p>" +
+                    "<p><b>Hobbies</b>: " + userPersonalInfo.hobbies + "</p>"
+                );
+            });
+
+            loadGallery();
+        }
+
+        function loadGallery() {
+
+        }
+
+        function editProfile() {
+            $("#user-info").addClass("hidden");
+            $("#edit-info-btn").addClass("hidden");
+
+            $("#username").html("<b>Username</b>: " + userPersonalInfo.username);
+            $("#name").attr("value", userPersonalInfo.name);
+            $("#occupation").attr("value", userPersonalInfo.occupation);
+            $("#hobbies").attr("value", userPersonalInfo.hobbies);
+            $("#edit-info-form").removeClass("hidden");
+        }
+
+        function finishEditProfile() {
+            event.preventDefault();
+
+            userPersonalInfo.name = $("#name").val();
+            userPersonalInfo.occupation = $("#occupation").val();
+            userPersonalInfo.hobbies = $("#hobbies").val();
+
+            $("#user-info").html(
+                "<p><b>Username</b>: " + userInfo.username + "</p>" +
+                "<p><b>Name</b>: " + userPersonalInfo.name + "</p>" +
+                "<p><b>Occupation</b>: " + userPersonalInfo.occupation + "</p>" +
+                "<p><b>Hobbies</b>: " + userPersonalInfo.hobbies + "</p>"
+            );
+
+            $("#user-info").removeClass("hidden");
+            $("#edit-info-btn").removeClass("hidden");
+            $("#edit-info-form").addClass("hidden");
+
+            // saveUserProfile();
+        }
+
+        function saveUserProfile() {
+
+            console.log(JSON.stringify(userPersonalInfo));
+            const url = "../save-user-details";
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(userPersonalInfo),
+                contentType: "application/json; charset=utf-8",
+                success: function(data,textStatus) {
+                    console.log('Saved: ' + data);
+                }
+            });
+        }
+
+        function getRandAvatar(event) {
+            event.preventDefault();
+            let newUrl = "http://api.adorable.io/avatars/" + Math.floor(Math.random() * 10000);
+            console.log(newUrl);
+            document.querySelector('#user-pic').src = newUrl;
+            userPersonalInfo.pic = newUrl;
+        }
+
+        let allUserDetails = [];
+
+        function getAllUserDetails() {
+            console.log('Getting all user details.');
+
+            $.getJSON('../get-all-user-details', function(data) {
+                console.log(data);
+                allUserDetails = data;
+            });
+        }
+
+        function clearUserDetails() {
+
+            const url = "../clear-user-details";
+            $.ajax({
+                url:url,
+                type: "DELETE",
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                success: function(data,textStatus) {
+                    console.log("Deleted user details.");
+                }
+            });
+        }
+
+    </script>
+
+</body>
+</html>
