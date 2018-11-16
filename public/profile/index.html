@@ -29,10 +29,10 @@
     <div class="leaves-border-right"></div>
 
     <div class="profile-main">
-        <h1>Profile</h1>
+        <h1 class="profile-title bg-secondary">Profile</h1>
 
         <div class="profile-info">
-            <div class="pic-container">
+            <div class="user-pic-container">
                 <img id="user-pic" src="https://api.adorable.io/avatars/hello" alt="profile-pic">
                 <button id="rand-pic-btn" class="bg-dark" onclick="getRandAvatar(event)">Get Random Avatar</button>
             </div>
@@ -61,10 +61,9 @@
             </div>
         </div>
 
-        <div class="gallery">
-            <h2 class="gallery-title">Gallery</h2>
-
-            <img class="user-picture" src="">
+        <div class="gallery bg-secondary">
+            <h1 class="gallery-title">Your Gallery</h1>
+            <!--<img class="user-picture" src="">-->
         </div>
     </div>
 
@@ -88,14 +87,11 @@
 
         function loadUserProfile() {
             userInfo = JSON.parse(localStorage.userInfo);
-            console.log(userInfo);
-
-            console.log(pictures);
-            document.querySelector(".user-picture").src = pictures[0].content;
+            console.log("User Info", userInfo);
 
             const query = '..\\get-user-details?username=' + userInfo.username;
             $.getJSON(query, function(data) {
-                console.log("Details", data);
+                console.log("Curr User Details", data);
                 if (data.length > 0 && data[0].username !== undefined) {
                     userPersonalInfo = data[0];
                 }
@@ -118,7 +114,62 @@
         }
 
         function loadGallery() {
+            let gallery = document.querySelector(".gallery");
+            gallery.innerHTML = "<h1 class=\"gallery-title\">Your Gallery</h1>";
 
+            let query = "../get-user-pictures?param=" + userInfo.username;
+            $.getJSON(query, function (data) {
+                console.log("Gallery", data);
+
+                for (let i = 0; i < data.length; i++) {
+                    let picContainer = document.createElement("div");
+                    picContainer.setAttribute("id", "picture" + i);
+                    picContainer.classList.add("pic-container");
+
+                    let newPicture = document.createElement("img");
+                    newPicture.classList.add("user-picture");
+                    newPicture.src = data[i].content;
+                    newPicture.setAttribute("onclick", "openPicture(this)");
+
+                    let pictureTitle = document.createElement("p");
+                    pictureTitle.classList.add("picture-title");
+                    pictureTitle.innerHTML = data[i].title;
+                    pictureTitle.innerHTML += " <small onclick='removePicture(" + i + ")'>Remove</small>";
+
+                    picContainer.appendChild(newPicture);
+                    picContainer.appendChild(pictureTitle);
+                    gallery.appendChild(picContainer);
+                }
+            });
+        }
+
+        function openPicture(el) {
+            console.log("Open", el.src);
+            // window.open(el.src, '_blank');
+            let image = new Image();
+            image.src = el.src;
+            window.open("").document.write(image.outerHTML);
+        }
+
+        function removePicture(picNum) {
+            console.log("Remove picture" + picNum);
+
+            let picture = document.querySelector("#picture" + picNum);
+            let title = picture.childNodes[1].textContent;
+            title = title.substr(0, title.indexOf(" Remove"));
+
+            const url = "../delete-picture?title=" + title;
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                success: function(data,textStatus) {
+                    console.log("DELETE: " + textStatus);
+                }
+            });
+
+            loadGallery()
         }
 
         function editProfile() {

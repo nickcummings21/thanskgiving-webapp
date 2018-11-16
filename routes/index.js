@@ -163,14 +163,51 @@ picsDb.once('open', function() {
 });
 
 
+router.post('/save-picture', function (req, res, next) {
+    console.log('Saving picture');
+
+    let picture = new Picture(req.body);
+
+    picture.save(function (err, post) {
+        if (err) return console.error(err);
+        // console.log("Picture saved.");
+        // console.log('Result: ' + post);
+        res.sendStatus(200);
+    });
+});
+
+router.delete('/delete-picture', function (req, res) {
+    console.log('DELETE picture: ', req.query.title);
+
+    const title = req.query.title;
+    Picture.deleteMany({ title: title }, function (err) {
+        console.log('Deleted picture.');
+    });
+    res.sendStatus(200);
+});
+
+router.get('/get-all-pictures', function (req, res, next) {
+    console.log("Getting all pictures");
+
+    Picture.find(function (err, pics) {
+        if (err) return console.error(err);
+        else {
+            console.log(pics);
+            res.json(pics);
+        }
+    });
+});
+
 router.get('/get-user-pictures', function (req, res, next) {
     console.log('Getting User Pictures');
 
-    UserDetails.find({ username: req.query.username }, function (err, user) {
+    const param = req.query.param;
+    // {$regex : ".*" + param + ".*"}
+    Picture.find({ username: param }, function (err, pics) {
         if (err) return console.error(err);
         else {
-            console.log(user);
-            res.json(user);
+            console.log(pics);
+            res.json(pics);
         }
     });
 });
@@ -178,11 +215,12 @@ router.get('/get-user-pictures', function (req, res, next) {
 router.get('/get-pictures-by-title', function (req, res, next) {
     console.log('Getting User Pictures');
 
-    UserDetails.find({ username: req.query.username }, function (err, user) {
+    const param = req.query.param;
+    Picture.find({ title: param }, function (err, pics) {
         if (err) return console.error(err);
         else {
-            console.log(user);
-            res.json(user);
+            console.log(pics);
+            res.json(pics);
         }
     });
 });

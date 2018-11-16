@@ -17,7 +17,7 @@
 
     <title>Games</title>
 </head>
-<body class="bg-secondary" onload="loadColors()" onbeforeunload="saveColors()">
+<body class="bg-secondary" onload="loadCanvas()" onbeforeunload="saveColors()">
 
     <nav class="main-nav bg-dark">
         <ul>
@@ -28,56 +28,55 @@
         </ul>
     </nav>
 
-    <div class="leaves-border-left"></div>
-    <div class="leaves-border-right"></div>
+    <div class="overlay">
+        <div class="games-main bg-secondary">
+            <h1>Draw something cool!</h1>
 
-    <div class="games-main">
-        <h1>Draw something cool!</h1>
-
-        <div class="drawing-area">
-            <h2 id="canvas-title">
-                Untitled
-                <small onclick="editCanvasTitle()"> edit</small>
-            </h2>
-            <div id="edit-canvas-title" class="hidden">
-                <label for="canvas-title-input"><b>Title</b>: </label>
-                <input id="canvas-title-input" type="text">
-                <button class="bg-dark" onclick="submitCanvasTitle()">Submit</button>
+            <div class="drawing-area">
+                <h2 id="canvas-title">
+                    Untitled
+                    <small onclick="editCanvasTitle()"> edit</small>
+                </h2>
+                <div id="edit-canvas-title" class="hidden">
+                    <label for="canvas-title-input"><b>Title</b>: </label>
+                    <input id="canvas-title-input" type="text">
+                    <button class="bg-dark" onclick="submitCanvasTitle()">Submit</button>
+                </div>
+                <canvas width="600" height="400"></canvas>
+                <div class="canvas-options bg-dark">
+                    <div class="colors">
+                        <div id="color1" class="color active-color" onclick="changeColor(1)"></div>
+                        <div id="color2" class="color" onclick="changeColor(2)"></div>
+                        <div id="color3" class="color" onclick="changeColor(3)"></div>
+                        <div id="color4" class="color" onclick="changeColor(4)"></div>
+                        <div id="color5" class="color" onclick="changeColor(5)"></div>
+                        <div id="color6" class="color" onclick="changeColor(6)"></div>
+                        <div id="color7" class="color" onclick="changeColor(7)"></div>
+                        <div id="color8" class="color" onclick="changeColor(8)"></div>
+                        <button class="edit-colors-btn bg-secondary" onclick="editColors()">Edit Colors</button>
+                    </div>
+                    <div class="color-editors hidden">
+                        <input id="colorEdit1" class="color-editor" type="text">
+                        <input id="colorEdit2" class="color-editor" type="text">
+                        <input id="colorEdit3" class="color-editor" type="text">
+                        <input id="colorEdit4" class="color-editor" type="text">
+                        <input id="colorEdit5" class="color-editor" type="text">
+                        <input id="colorEdit6" class="color-editor" type="text">
+                        <input id="colorEdit7" class="color-editor" type="text">
+                        <input id="colorEdit8" class="color-editor" type="text">
+                        <button class="confirm-colors-btn bg-secondary" onclick="confirmColors()">Confirm</button>
+                    </div>
+                    <hr class="color-divider">
+                    <div class="line-size-selection">
+                        <span id="size4" class="line-size" onclick="changeLineSize(4)">Extra Small</span>
+                        <span id="size16" class="line-size active-line-size" onclick="changeLineSize(16)">Small</span>
+                        <span id="size32" class="line-size" onclick="changeLineSize(32)">Medium</span>
+                        <span id="size64" class="line-size" onclick="changeLineSize(64)">Large</span>
+                        <span id="size128" class="line-size" onclick="changeLineSize(128)">Extra Large</span>
+                    </div>
+                </div>
+                <button class="save-canvas-btn bg-dark" onclick="saveCanvas(event)">Save to Gallery</button>
             </div>
-            <canvas width="600" height="400"></canvas>
-            <div class="canvas-options bg-dark">
-                <div class="colors">
-                    <div id="color1" class="color active-color" onclick="changeColor(1)"></div>
-                    <div id="color2" class="color" onclick="changeColor(2)"></div>
-                    <div id="color3" class="color" onclick="changeColor(3)"></div>
-                    <div id="color4" class="color" onclick="changeColor(4)"></div>
-                    <div id="color5" class="color" onclick="changeColor(5)"></div>
-                    <div id="color6" class="color" onclick="changeColor(6)"></div>
-                    <div id="color7" class="color" onclick="changeColor(7)"></div>
-                    <div id="color8" class="color" onclick="changeColor(8)"></div>
-                    <button class="edit-colors-btn bg-secondary" onclick="editColors()">Edit Colors</button>
-                </div>
-                <div class="color-editors hidden">
-                    <input id="colorEdit1" class="color-editor" type="text">
-                    <input id="colorEdit2" class="color-editor" type="text">
-                    <input id="colorEdit3" class="color-editor" type="text">
-                    <input id="colorEdit4" class="color-editor" type="text">
-                    <input id="colorEdit5" class="color-editor" type="text">
-                    <input id="colorEdit6" class="color-editor" type="text">
-                    <input id="colorEdit7" class="color-editor" type="text">
-                    <input id="colorEdit8" class="color-editor" type="text">
-                    <button class="confirm-colors-btn bg-secondary" onclick="confirmColors()">Confirm</button>
-                </div>
-                <hr class="color-divider">
-                <div class="line-size-selection">
-                    <span id="size4" class="line-size" onclick="changeLineSize(4)">Extra Small</span>
-                    <span id="size16" class="line-size active-line-size" onclick="changeLineSize(16)">Small</span>
-                    <span id="size32" class="line-size" onclick="changeLineSize(32)">Medium</span>
-                    <span id="size64" class="line-size" onclick="changeLineSize(64)">Large</span>
-                    <span id="size128" class="line-size" onclick="changeLineSize(128)">Extra Large</span>
-                </div>
-            </div>
-            <button class="save-canvas-btn bg-dark" onclick="saveCanvas(event)">Save to Gallery</button>
         </div>
     </div>
 
@@ -88,13 +87,21 @@
 
     <script>
 
+        let userInfo = {};
+
         let canvasTitle = document.querySelector("#canvas-title");
         let editCanvasTitleEl = document.querySelector("#edit-canvas-title");
         let canvasTitleInput = document.querySelector("#canvas-title-input");
 
-        function editCanvasTitle() {
+        const titleSubText = "<small onclick='editCanvasTitle()'> edit</small>";
+
+        function extractTitle() {
             let title = canvasTitle.textContent.trim();
-            title = title.substr(0, title.indexOf(" edit")).trim();
+            return title.substr(0, title.indexOf(" edit")).trim();
+        }
+
+        function editCanvasTitle() {
+            let title = extractTitle();
             console.log(title);
 
             canvasTitleInput.value = title;
@@ -105,7 +112,7 @@
 
         function submitCanvasTitle() {
             let title = canvasTitleInput.value;
-            canvasTitle.innerHTML = title + "<small onclick=\'editCanvasTitle()\'> edit</small>"
+            canvasTitle.innerHTML = title + titleSubText;
 
             editCanvasTitleEl.classList.add("hidden");
             canvasTitle.classList.remove("hidden");
@@ -117,8 +124,29 @@
         let lastEvent = null;
         let mouseDown = false;
 
-        context.fillStyle = "white";
-        context.fillRect(0, 0, 600, 400);
+        function loadCanvas() {
+            if (localStorage.userInfo !== undefined)
+                userInfo = JSON.parse(localStorage.userInfo);
+
+            if (localStorage.picture !== undefined) {
+                let picture = JSON.parse(localStorage.picture);
+                console.log(picture);
+
+                let img = new Image;
+                img.onload = function(){
+                    console.log(img);
+                    context.drawImage(img, 0, 0);
+                };
+                img.src = picture.content;
+
+                canvasTitle.innerHTML = picture.title + titleSubText;
+            }
+            else {
+                context.fillStyle = "white";
+                context.fillRect(0, 0, 600, 400);
+            }
+            loadColors();
+        }
 
         page.mouseup(function () {
             mouseDown = false;
@@ -235,19 +263,29 @@
         function saveColors() {
             localStorage.colors = JSON.stringify(colors);
             console.log(localStorage.colors);
+            stashCanvas();
         }
 
-        let user = {};
+        function stashCanvas() {
+            let picture = {
+                username: "",
+                title: extractTitle(),
+                content: canvas[0].toDataURL()
+            };
+            localStorage.picture = JSON.stringify(picture);
+            console.log(picture);
+        }
 
         function saveCanvas(event) {
             event.preventDefault();
+
             let user = JSON.parse(localStorage.userInfo);
-
             if (user.username === undefined) alert("Please login to enable saving of pictures.");
-            console.log("Saving canvas");
 
-            let title = canvasTitle.textContent.trim();
-            title = title.substr(0, title.indexOf(" edit")).trim();
+            console.log("Saving canvas");
+            stashCanvas();
+
+            let title = extractTitle();
 
             let picture = {
                 username: user.username,
@@ -255,12 +293,22 @@
                 content: canvas[0].toDataURL()
             };
 
-            let userPictures = [picture];
-            localStorage.pictures = JSON.stringify(userPictures);
-            console.log(userPictures);
+            console.log(JSON.stringify(picture));
+            const url = "../save-picture";
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(picture),
+                contentType: "application/json; charset=utf-8",
+                success: function(data,textStatus) {
+                    console.log('Saved: ' + data);
+                }
+            });
+
+            alert("Picture was saved.");
+            // let modal = document.querySelector(".modal");
+            // modal.style.visibility = "visible";
         }
-
-
 
     </script>
 

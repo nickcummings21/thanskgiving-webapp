@@ -30,45 +30,44 @@
         </ul>
     </nav>
 
-    <div class="leaves-border-left"></div>
-    <div class="leaves-border-right"></div>
+    <div class="overlay">
+        <div class="main bg-secondary">
+            <h1 class="salutation">Happy Thanksgiving!</h1>
 
-    <div class="main">
-        <h1 class="salutation">Happy Thanksgiving!</h1>
-
-        <div class="main-img-container">
-            <img src="images/turkey.png" alt="turkey-pic" class="main-img">
-        </div>
-
-        <div id="sign-in" class="sign-in bg-primary align-center">
-            <h2>Sign In</h2>
-
-            <form class="align-left" autocomplete="off">
-                <div class="row">
-                    <div class="col-30">
-                        <label for="username">Username: </label>
-                    </div>
-                    <div class="col-60">
-                        <input type="text" id="username">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-30">
-                        <label for="password">Password: </label>
-                    </div>
-                    <div class="col-60">
-                        <input type="password" id="password">
-                    </div>
-                </div>
-            </form>
-            <div class="row">
-                <button class="bg-dark" id="sign-in-btn" onclick="signIn(event)">Submit</button>
+            <div class="main-img-container">
+                <img src="images/turkey.png" alt="turkey-pic" class="main-img">
             </div>
-            <small>
-                If you have not yet created an account, please
-                <span class="register-link" onclick="switchToRegister()">register</span>
-                first.
-            </small>
+
+            <div id="sign-in" class="sign-in bg-primary align-center">
+                <h2>Sign In</h2>
+
+                <form class="align-left" autocomplete="off">
+                    <div class="row">
+                        <div class="col-30">
+                            <label for="username">Username: </label>
+                        </div>
+                        <div class="col-60">
+                            <input type="text" id="username">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-30">
+                            <label for="password">Password: </label>
+                        </div>
+                        <div class="col-60">
+                            <input type="password" id="password">
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <button class="bg-dark" id="sign-in-btn" onclick="signIn(event)">Submit</button>
+                </div>
+                <small>
+                    If you have not yet created an account, please
+                    <span class="register-link" onclick="switchToRegister()">register</span>
+                    first.
+                </small>
+            </div>
         </div>
     </div>
 

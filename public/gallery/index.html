@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=yes, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous">
+    </script>
+
+    <link rel="stylesheet" href="../utils.css">
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="gallery.css">
+
+    <title>Gallery</title>
+</head>
+<body class="bg-secondary">
+
+
+    <nav class="main-nav bg-dark">
+        <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../trivia">Trivia</a></li>
+            <li><a href="../profile">Profile</a></li>
+            <li><a href="../drawing">Drawing</a></li>
+            <li><a href="/">Gallery</a></li>
+        </ul>
+    </nav>
+
+    <div class="overlay">
+        <div class="gallery-main">
+            <h1 class="gallery-title">Gallery</h1>
+
+            <form action="" class="gallery-search" autocomplete="off">
+                <label for="search-input">Search:</label>
+                <input id="search-input" type="text" placeholder="username or title">
+                <button class="search-btn bg-dark" onclick="search(event)">Go</button>
+            </form>
+            <small>Hint: enter "all" to see all pictures from all users.</small>
+
+            <div id="results" class=""></div>
+        </div>
+    </div>
+
+    <footer class="main-footer bg-dark">
+        <p>Copyright &copy; 2018 by Nicholas Cummings</p>
+        <p>All Rights Reserved.</p>
+    </footer>
+
+
+    <script>
+
+        let searchInputEl = document.querySelector("#search-input");
+        let resultsEl = document.querySelector("#results");
+
+        function search(event) {
+            event.preventDefault();
+            console.log("Retrieving pictures.");
+
+            let param = searchInputEl.value;
+            if (param === "") {
+                alert("Please input a valid search parameter.");
+                return;
+            }
+            if (param === "all") {
+                getAllPics();
+                return;
+            }
+
+            resultsEl.innerHTML = "";
+
+            let usernameQuery = "../get-user-pictures?param=" + param;
+            $.getJSON(usernameQuery, function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    appendPicture(data[i]);
+                }
+            });
+
+            let titleQuery = "../get-pictures-by-title?param=" + param;
+            $.getJSON(titleQuery, function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    appendPicture(data[i]);
+                }
+            })
+        }
+
+        function appendPicture(picture) {
+            let picContainer = document.createElement("div");
+            picContainer.classList.add("pic-container");
+
+            let newPicture = document.createElement("img");
+            newPicture.classList.add("user-picture");
+            newPicture.src = picture.content;
+            newPicture.setAttribute("onclick", "openPicture(this)");
+
+            let pictureTitle = document.createElement("p");
+            pictureTitle.classList.add("picture-title");
+            pictureTitle.innerHTML = picture.title;
+
+            picContainer.appendChild(newPicture);
+            picContainer.appendChild(pictureTitle);
+            resultsEl.appendChild(picContainer);
+        }
+
+        function getAllPics() {
+            $.getJSON("/get-all-pictures", function (data) {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
+                    appendPicture(data[i]);
+                }
+            });
+        }
+
+    </script>
+
+
+</body>
+</html>

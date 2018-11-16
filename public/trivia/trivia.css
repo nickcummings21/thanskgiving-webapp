@@ -1,4 +1,8 @@
 
 .trivia-main {
     min-height: 100vh;
+    width: 75%;
+    margin: auto;
+    padding: 1rem;
+    background-color: rgba(232, 194, 60, .9);
 }

@@ -4,12 +4,17 @@
     font-size: 2.5rem;
 }
 
+.overlay {
+    background-color: rgba(232, 194, 60, .3);
+}
+
 .main {
     text-align: center;
     vertical-align: middle;
-    width: 95%;
-    margin: 1rem auto;
+    width: 75%;
+    margin: auto;
     min-height: 100vh;
+    background-color: rgba(232, 194, 60, .9);
 }
 
 .sign-in {
